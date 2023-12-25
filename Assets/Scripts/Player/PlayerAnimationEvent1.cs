@@ -12,12 +12,14 @@ public class PlayerAnimationEvent1 : MonoBehaviour
     public ParticleSystem GenyuSkill_02;
     public ParticleSystem GenyuSkill_03;
     public GameObject skillBall;
+    public GameObject skillLotus;
 
 
     private void Start()
     {
         arrowStart = GameObject.Find("bowStart").transform;
         skillBall.SetActive(false);
+        skillLotus.SetActive(false);
     }
     void Shoot()
     {
@@ -39,6 +41,7 @@ public class PlayerAnimationEvent1 : MonoBehaviour
 
     public void UltimateSkill()
     {
+        skillBall.transform.position = transform.position;
         skillBall.SetActive(true);
         GenyuSkill.Play();
         GenyuSkill_01.Play();
@@ -49,5 +52,12 @@ public class PlayerAnimationEvent1 : MonoBehaviour
     public void ActivateEffect()
     {
 
+    }
+
+    public void DodgeSkill()
+    {
+        skillLotus.transform.position = transform.position;
+        skillLotus.transform.forward = transform.forward;
+        skillLotus.SetActive(true);
     }
 }

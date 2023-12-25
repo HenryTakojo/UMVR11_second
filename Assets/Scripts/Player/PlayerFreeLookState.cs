@@ -21,6 +21,8 @@ public class PlayerFreeLookState : PlayerBaseState
         stateMachine.InputReader.JumpEvent += OnJump;
         stateMachine.InputReader.UltimatrSkillEvent += OnUltimateSkill;
         stateMachine.InputReader.HealEvent += OnHeal;
+        stateMachine.InputReader.DodgeSkillEvent += OnDodgeSkill;
+        stateMachine.InputReader.SprintEvent += OnSprint;
 
         stateMachine.Animator.CrossFadeInFixedTime(FreeLookBlendTreeHash, CrossFadeDuration);
     }
@@ -53,6 +55,7 @@ public class PlayerFreeLookState : PlayerBaseState
         stateMachine.InputReader.JumpEvent -= OnJump;
         stateMachine.InputReader.UltimatrSkillEvent -= OnUltimateSkill;
         stateMachine.InputReader.HealEvent -= OnHeal;
+        stateMachine.InputReader.DodgeSkillEvent -= OnDodgeSkill;
     }
 
     private void OnTarget()
@@ -75,6 +78,16 @@ public class PlayerFreeLookState : PlayerBaseState
     private void OnHeal()
     {
         stateMachine.SwitchState(new PlayerHealState(stateMachine));
+    }
+
+    private void OnDodgeSkill()
+    {
+        stateMachine.SwitchState(new PlayerDodgeSkillState(stateMachine));
+    }
+
+    private void OnSprint()
+    {
+        stateMachine.SwitchState(new PlayerSprintState(stateMachine));
     }
 
     private Vector3 CalculateMovement()

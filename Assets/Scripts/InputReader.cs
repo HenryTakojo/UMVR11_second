@@ -12,11 +12,12 @@ public class InputReader : MonoBehaviour, Controls.IPlayerActions
     public Vector2 MovementValue {  get; private set; }
 
     public event Action JumpEvent;
-    public event Action DodgeEvent;
     public event Action TargetEvent;
     public event Action CancelEvent;
     public event Action UltimatrSkillEvent;
     public event Action HealEvent;
+    public event Action DodgeSkillEvent;
+    public event Action SprintEvent;
 
 
     private Controls controls;
@@ -37,13 +38,6 @@ public class InputReader : MonoBehaviour, Controls.IPlayerActions
         if (!context.performed) { return; }
 
         JumpEvent?.Invoke();
-    }
-
-    public void OnDodge(InputAction.CallbackContext context)
-    {
-        if (!context.performed) { return; }
-
-        DodgeEvent?.Invoke();
     }
 
     public void OnMove(InputAction.CallbackContext context)
@@ -91,6 +85,19 @@ public class InputReader : MonoBehaviour, Controls.IPlayerActions
     {
         if (!context.performed) { return; }
         HealEvent?.Invoke();
+    }
+
+    public void OnDodgeSkill(InputAction.CallbackContext context)
+    {
+        if (!context.performed) { return; }
+        DodgeSkillEvent?.Invoke();
+    }
+
+    public void OnSprint(InputAction.CallbackContext context)
+    {
+        if (!context.performed) { return; }
+
+        SprintEvent?.Invoke();
     }
 }
 

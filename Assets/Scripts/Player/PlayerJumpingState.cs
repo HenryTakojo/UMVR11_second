@@ -14,7 +14,8 @@ public class PlayerJumpingState : PlayerBaseState
     {
         stateMachine.ForceReceiver.Jump(stateMachine.JumpForce);
 
-        momentum = stateMachine.Controller.velocity;
+        //momentum = stateMachine.Controller.velocity;
+        momentum = CalculateMovement();
         momentum.y = 0f;
 
         stateMachine.Animator.CrossFadeInFixedTime(JumpHash, crossFadeDuratoin);
@@ -22,13 +23,14 @@ public class PlayerJumpingState : PlayerBaseState
 
     public override void Tick(float deltaTime)
     {
-        Move(momentum, deltaTime);
+        Move(momentum * stateMachine.FreeLookMovementSpeed, deltaTime);
 
         if(stateMachine.Controller.velocity.y <= 0f)
         {
             stateMachine.SwitchState(new PlayerFallingState(stateMachine));
             return;
         }
+        FaceMovementDirection(momentum, deltaTime);
 
         FaceTarget();
     }
@@ -38,5 +40,28 @@ public class PlayerJumpingState : PlayerBaseState
         
     }
 
+    private Vector3 CalculateMovement()
+    {
+        Vector3 forward = stateMachine.MainCameraTransform.forward;
+        Vector3 right = stateMachine.MainCameraTransform.right;
 
+        forward.y = 0f;
+        right.y = 0f;
+
+        forward.Normalize();
+        right.Normalize();
+        Vector3 vMoveValue = forward * stateMachine.InputReader.MovementValue.y +
+            right * stateMachine.InputReader.MovementValue.x;
+        
+        return vMoveValue;
+
+    }
+
+    private void FaceMovementDirection(Vector3 movement, float deltaTime)
+    {
+        stateMachine.transform.rotation = Quaternion.Lerp(
+            stateMachine.transform.rotation,
+            Quaternion.LookRotation(movement),
+            deltaTime * stateMachine.RotationDamping);
+    }
 }
