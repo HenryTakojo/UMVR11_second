@@ -1,0 +1,103 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.InputSystem;
+
+public class InputReader : MonoBehaviour, Controls.IPlayerActions
+{
+    public bool IsAttacking {  get; private set; }
+
+
+    public Vector2 MovementValue {  get; private set; }
+
+    public event Action JumpEvent;
+    public event Action TargetEvent;
+    public event Action CancelEvent;
+    public event Action UltimatrSkillEvent;
+    public event Action HealEvent;
+    public event Action DodgeSkillEvent;
+    public event Action SprintEvent;
+
+
+    private Controls controls;
+    void Start()
+    {
+        controls = new Controls();
+        controls.Player.SetCallbacks(this);
+        controls.Player.Enable();
+
+    }
+    private void OnDestroy()
+    {
+        controls.Player.Disable();
+        
+    }
+    public void OnJump(InputAction.CallbackContext context)
+    {
+        if (!context.performed) { return; }
+
+        JumpEvent?.Invoke();
+    }
+
+    public void OnMove(InputAction.CallbackContext context)
+    {
+        MovementValue = context.ReadValue<Vector2>();
+    }
+
+    public void OnLook(InputAction.CallbackContext context)
+    {
+        
+    }
+
+    public void OnTarget(InputAction.CallbackContext context)
+    {
+        if (!context.performed) { return; }
+        TargetEvent?.Invoke();
+    }
+
+    public void OnCancel(InputAction.CallbackContext context)
+    {
+        if (!context.performed) { return; }
+        CancelEvent?.Invoke();
+    }
+
+    public void OnAttack(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            IsAttacking = true;
+        }
+        else if (context.canceled)
+        {
+            IsAttacking = false;
+        }
+    }
+
+    public void OnUltimatrSkill(InputAction.CallbackContext context)
+    {
+        if (!context.performed) { return; }
+        UltimatrSkillEvent?.Invoke();
+    }
+
+
+    public void OnHeal(InputAction.CallbackContext context)
+    {
+        if (!context.performed) { return; }
+        HealEvent?.Invoke();
+    }
+
+    public void OnDodgeSkill(InputAction.CallbackContext context)
+    {
+        if (!context.performed) { return; }
+        DodgeSkillEvent?.Invoke();
+    }
+
+    public void OnSprint(InputAction.CallbackContext context)
+    {
+        if (!context.performed) { return; }
+
+        SprintEvent?.Invoke();
+    }
+}
+

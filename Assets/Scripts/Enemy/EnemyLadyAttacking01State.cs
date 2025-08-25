@@ -1,0 +1,61 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class EnemyLadyAttacking01State : EnemyBaseState
+{
+    private readonly int AttackLady01Hash = Animator.StringToHash("LadyAttack01");
+
+    private const float TransitionDuration = 0.1f;
+
+    private int howDice = 0;
+    int r;
+
+    private float tick = 0f;
+    private float bossActonFreezeTime = 1f;
+
+    public EnemyLadyAttacking01State(EnemyStateMachine stateMachine) : base(stateMachine)
+    {
+    }
+
+    public override void Enter()
+    {
+        foreach (var weapon in stateMachine.Weapons)
+        {
+            weapon.SetAttack(stateMachine.AttackDamage);
+        }
+        tick = 0f;
+        stateMachine.Animator.CrossFadeInFixedTime(AttackLady01Hash, TransitionDuration);
+    }
+
+    public override void Tick(float deltaTime)
+    {
+        tick += Time.deltaTime;
+
+        if (GetNormalizedTime(stateMachine.Animator) >= 1 && tick >= bossActonFreezeTime)
+        {
+            stateMachine.SwitchState(new EnemyChasingState(stateMachine));
+            Debug.Log("ChangeToChase");
+            return;
+        }
+
+        //攻擊一次後，切換位置
+        //if (howDice == 1)
+        //{
+        //    stateMachine.SwitchState(new EnemyAttackingMoveToStateTest01(stateMachine));
+        //    howDice = 0;
+        //    return;
+        //}
+        //else if ((howDice == 2))
+        //{
+        //    stateMachine.SwitchState(new EnemyAttackingMoveToStateTest01(stateMachine));
+        //    howDice = 0;
+        //    return;
+        //}
+    }
+
+    public override void Exit()
+    {
+
+    }
+}
